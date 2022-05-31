@@ -8,6 +8,7 @@ export const createHotspotIcon = (container, hotspotConfig, popup, popperInstanc
   const { popupProps: { open = false } } = hotspotConfig;
 
   let isVisible;
+  let timeoutID;
   const hotspotIcon = document.createElement('div');
 
   hotspotIcon.style.position = 'absolute';
@@ -33,14 +34,14 @@ export const createHotspotIcon = (container, hotspotConfig, popup, popperInstanc
   const hideEvents = ['mouseleave', 'blur'];
 
   showEvents.forEach((event) => {
-    hotspotIcon.addEventListener(event, () => showPopup(popup, popperInstance));
+    hotspotIcon.addEventListener(event, () => {clearTimeout(timeoutID); return showPopup(popup, popperInstance);});
   });
 
   if (!open) {
     hideEvents.forEach((event) => {
       hotspotIcon.addEventListener(
         event,
-        () => setTimeout(() => hidePopup(popup, isVisible), 160)
+        () => timeoutID = setTimeout(() => hidePopup(popup, isVisible), 500)
       );
     });
   }
